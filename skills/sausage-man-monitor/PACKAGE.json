@@ -3,13 +3,13 @@
   "name": "sausage-man-monitor",
   "version": "1.0.0",
   "files": {
-    "SKILL.md": "52865b5ac5f318e3a41df90055a889f105cde2b31a8b17e6c18eee4be057f90b",
+    "SKILL.md": "5d060458be5b13af64e4a3d38c602c6adfb2977ba9dc5deb92a14f8661b0df2a",
     "agents/openai.yaml": "ba057332bdea3a48277cfa0711f325d1a7daa09a8b7ebc03c1b9d876b90270ce",
     "assets/config.example.json": "c20360a4657f8a683554039f0c406bebdf147d85bc0f557fce46dc773351e845",
     "references/capabilities.md": "f47046164c1cc58b34052af92bad7ac9113d18c9e28eb7779a095caac3bbdae6",
     "references/host-workflows.md": "351f07b446e6d0bc16b14d198c53f2c6dae1beab2d01d0117edbeb953a58e51f",
     "references/install.md": "045458bd5cc0c2fd9860f512b6dd8354b764cc7011a9e3fcb2160cb57ea2b5ff",
     "scripts/query.py": "b09e498ce4d8df07b2835dcbb7a82a2e14d5888c025b786f6335ae1ab7a66fbc",
-    "scripts/package_skill.py": "94a43b6d887257a655360792fda6b354cb8caaa0115e5efb3e771c5358b89f5c"
+    "scripts/package_skill.py": "f2275749b2fe6f4afbe68419581c208174926b4ac827497479dfbf92be1c838f"
   }
 }

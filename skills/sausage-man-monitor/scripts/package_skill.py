@@ -27,7 +27,7 @@ def read(path):
 
 
 def write(path, value):
-    Path(path).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    Path(path).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
 
 
 def ordinary(path):
@@ -67,7 +67,7 @@ def seal(root, version):
     text, count = re.subn(r'(?m)^  version: "[^"]+"$', '  version: "' + version + '"', text)
     if count != 1:
         raise ValueError('SKILL.md 需要唯一的 metadata.version。')
-    (root / 'SKILL.md').write_text(text, encoding='utf-8')
+    (root / 'SKILL.md').write_text(text, encoding='utf-8', newline='\n')
     value = {'schema': 'community.skill.package.v1', 'name': NAME, 'version': version,
              'files': {name: digest(managed_path(root, name)) for name in FILES}}
     write(root / 'PACKAGE.json', value)
