@@ -1,9 +1,9 @@
 name: Community workbench Skill
 on:
   push:
-    paths: ['skills/sausage-man-monitor/**', 'tests/test_sausage_skill.py', 'install.mjs', '.github/workflows/sausage-skill.yml']
+    paths: ['skills/sausage-man-monitor/**', 'tests/test_sausage_skill.py', 'scripts/check-community-artifacts.py', 'install.mjs', '.github/workflows/sausage-skill.yml']
   pull_request:
-    paths: ['skills/sausage-man-monitor/**', 'tests/test_sausage_skill.py', 'install.mjs', '.github/workflows/sausage-skill.yml']
+    paths: ['skills/sausage-man-monitor/**', 'tests/test_sausage_skill.py', 'scripts/check-community-artifacts.py', 'install.mjs', '.github/workflows/sausage-skill.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -31,3 +31,16 @@ jobs:
         with:
           name: sausage-man-monitor-${{ matrix.os }}
           path: ${{ runner.temp }}/sausage-man-monitor.zip
+  identical-package:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: sausage-man-monitor-*
+          path: ${{ runner.temp }}/skill-archives
+      - run: python -B scripts/check-community-artifacts.py "${{ runner.temp }}/skill-archives"

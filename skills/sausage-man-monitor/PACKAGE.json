@@ -10,6 +10,6 @@
     "references/host-workflows.md": "351f07b446e6d0bc16b14d198c53f2c6dae1beab2d01d0117edbeb953a58e51f",
     "references/install.md": "045458bd5cc0c2fd9860f512b6dd8354b764cc7011a9e3fcb2160cb57ea2b5ff",
     "scripts/query.py": "b09e498ce4d8df07b2835dcbb7a82a2e14d5888c025b786f6335ae1ab7a66fbc",
-    "scripts/package_skill.py": "f2275749b2fe6f4afbe68419581c208174926b4ac827497479dfbf92be1c838f"
+    "scripts/package_skill.py": "4ca82b5fddd26463ededff754fa87b7be1adb61c5d1e57dfe0bf1bb8ba10fef0"
   }
 }

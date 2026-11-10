@@ -203,10 +203,12 @@ def pack(root, output):
     value = verify(root)
     output = Path(output).expanduser().resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(output, 'x', compression=zipfile.ZIP_DEFLATED) as archive:
+    # Small source-only package: stored entries avoid zlib-version differences.
+    with zipfile.ZipFile(output, 'x', compression=zipfile.ZIP_STORED) as archive:
         for name in sorted([*value['files'], 'PACKAGE.json']):
             info = zipfile.ZipInfo(NAME + '/' + name, date_time=(2020, 1, 1, 0, 0, 0))
-            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3
+            info.compress_type = zipfile.ZIP_STORED
             info.external_attr = 0o100644 << 16
             archive.writestr(info, (root / name).read_bytes())
     return {'ok': True, 'version': value['version'], 'output': str(output), 'sha256': digest(output), 'files': len(value['files']) + 1}
