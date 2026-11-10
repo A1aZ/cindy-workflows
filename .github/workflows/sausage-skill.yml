@@ -1,0 +1,33 @@
+name: Community workbench Skill
+on:
+  push:
+    paths: ['skills/sausage-man-monitor/**', 'tests/test_sausage_skill.py', 'install.mjs', '.github/workflows/sausage-skill.yml']
+  pull_request:
+    paths: ['skills/sausage-man-monitor/**', 'tests/test_sausage_skill.py', 'install.mjs', '.github/workflows/sausage-skill.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -B skills/sausage-man-monitor/scripts/package_skill.py verify
+      - run: python -B -m unittest discover -s tests -p test_sausage_skill.py -v
+      - run: node scripts/check-redaction.mjs
+      - run: node scripts/check-template-sync.mjs
+      - run: node scripts/check-package.mjs
+      - run: python -B skills/sausage-man-monitor/scripts/package_skill.py pack --output "${{ runner.temp }}/sausage-man-monitor.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sausage-man-monitor-${{ matrix.os }}
+          path: ${{ runner.temp }}/sausage-man-monitor.zip

@@ -7,6 +7,10 @@ const root = path.resolve(import.meta.dirname, '..');
 const required = [
   'README.md',
   'install.mjs',
+  'skills/sausage-man-monitor/SKILL.md',
+  'skills/sausage-man-monitor/PACKAGE.json',
+  'skills/sausage-man-monitor/scripts/query.py',
+  'skills/sausage-man-monitor/scripts/package_skill.py',
   'skills/filo-support-replies/SKILL.md',
   'skills/filo-support-replies/assets/support-policy.example.json',
   'skills/filo-support-replies/scripts/validate_policy.py',

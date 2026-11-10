@@ -2,13 +2,30 @@
 
 这个仓库集中保存可协作迁移的 Cindy 工作流。每条工作流都包含自己的 Skill、脚本、模板和测试；运行态配置、连接器凭证、审计日志、SQLite 数据库和报告只保留在安装目标的 `.cindy/` 中，不进入仓库。
 
-当前包含五条工作流：
+当前包含以下工作流：
 
 - `filo-support-replies`：扫描 Gmail（包括 Spam），检查同事是否已回复、产品能力、Issue/PR 和发布版本，在原线程创建标准 Gmail 富文本回复草稿，并按本地策略决定是否自动发送。
 - `filoai-feedback-triage`：扫描 Gmail 与 Feishu，先诊断短反馈，再核对产品、代码、Issue、PR 和发布记录，创建或补充证据充分的 Bug/Feature 工单。
 - `cindy-update-poster`：生成 Cindy 日报海报与中英文文案。
 - `model-comparison-poster`：从官方模型资料和配置的目录地址核验模型能力/价格，生成中英文对比海报、HTML、PNG 和社媒文案。
 - `xiaohongshu-feedback-monitor`：通过用户自己的 Chrome Profile 只读采集小红书评论、私信和群聊，生成增量反馈报告。
+- `sausage-man-monitor`：连接现有香肠社区工作台，查询反馈、原文、报表与行动，校验发布一致性并导出；同一个包可供 GitHub 与 Cindy Skills/SkillHub 分发。
+
+## 香肠社区工作台
+
+`node install.mjs --workflow community --target <已有工作目录>` 安装到目标项目的 `.agents/skills/sausage-man-monitor`。需要 Python 3.10+，不创建采集或调度。连接配置放在用户 `~/.config/sausage-man-monitor/config.json`，与 Skill 包独立。
+
+在安装后的 Skill 目录运行：
+
+```bash
+python -X utf8 -B scripts/query.py configure --base-url http://WORKBENCH_HOST:8777
+python -X utf8 -B scripts/query.py doctor
+python -X utf8 -B scripts/query.py search --q 卡顿 --all
+```
+
+源码正本为 `skills/sausage-man-monitor`，通过其 `scripts/package_skill.py` 校验、打包、更新与回退。ZIP 可直接在 Cindy「插件 → Skills」导入，也可发布至 SkillHub；两个渠道使用相同文件清单及哈希。安装升级检测本地改动，保留个人连接配置。完整流程见 [安装说明](skills/sausage-man-monitor/references/install.md)。异地客户端仍需可达的工作台地址，本包不建立公网映射。
+
+校验命令：`python -B -m unittest discover -s tests -p test_sausage_skill.py -v`。GitHub Actions 在 Windows 与 Linux 校验并生成可供 Cindy 导入的同一 ZIP。
 
 ## Cindy 角色外观资源
 

@@ -18,7 +18,9 @@ const interactive = args.includes('--interactive') && !args.includes('--non-inte
 const rl = interactive ? readline.createInterface({ input: process.stdin, output: process.stdout }) : null;
 
 const workflowAliases = {
-  all: ['filo-support-replies', 'filoai-feedback-triage', 'cindy-update-poster', 'model-comparison-poster', 'xiaohongshu-feedback-monitor'],
+  all: ['filo-support-replies', 'filoai-feedback-triage', 'cindy-update-poster', 'model-comparison-poster', 'xiaohongshu-feedback-monitor', 'sausage-man-monitor'],
+  community: ['sausage-man-monitor'],
+  'sausage-man-monitor': ['sausage-man-monitor'],
   support: ['filo-support-replies'],
   'filo-support-replies': ['filo-support-replies'],
   triage: ['filoai-feedback-triage'],
@@ -75,6 +77,15 @@ function runPackageChecks() {
 }
 function installSkill(name, overwrite = false) {
   copyTree(path.join(packageRoot, 'skills', name), path.join(target, '.agents', 'skills', name), overwrite);
+}
+
+function installCommunity() {
+  runPackageChecks();
+  const python = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+  const command = [path.join(packageRoot, 'skills', 'sausage-man-monitor', 'scripts', 'package_skill.py'),
+    'install', '--target', path.join(target, '.agents', 'skills', 'sausage-man-monitor'), '--apply'];
+  if (args.includes('--adopt-existing')) command.push('--adopt-existing');
+  execFileSync(python, command, { stdio: 'inherit' });
 }
 
 async function installSupport() {
@@ -186,7 +197,7 @@ function installXiaohongshu() {
   for (const file of [`${workflow}.txt`, `${workflow}.yaml`]) fs.copyFileSync(path.join(packageRoot, 'templates', 'schedules', file), path.join(localRoot, file));
 }
 
-if (!workflowAliases[workflowArg]) fail(`未知 workflow：${workflowArg}。可选：all、filo-support-replies、filoai-feedback-triage、cindy-update-poster、model-comparison-poster、xiaohongshu-feedback-monitor`);
+if (!workflowAliases[workflowArg]) fail(`未知 workflow：${workflowArg}。可选：all、filo-support-replies、filoai-feedback-triage、cindy-update-poster、model-comparison-poster、xiaohongshu-feedback-monitor、community`);
 if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) fail(`目标目录不存在：${target}`);
 protectLocalData();
 const selected = workflowAliases[workflowArg];
@@ -195,9 +206,12 @@ if (selected.includes('filoai-feedback-triage')) await installTriage();
 if (selected.includes('cindy-update-poster')) installPoster();
 if (selected.includes('model-comparison-poster')) installModelComparisonPoster();
 if (selected.includes('xiaohongshu-feedback-monitor')) installXiaohongshu();
+if (selected.includes('sausage-man-monitor')) installCommunity();
 runPackageChecks();
 console.log(`安装完成：${target}`);
 console.log(`已安装工作流：${selected.join('、')}`);
-console.log('下一步：在 Cindy 中连接所需 Gmail、Feishu、GitHub 或浏览器连接器，再使用目标目录 .cindy/ 下对应的 schedule 模板创建独立、默认暂停的定时任务。安装器不会写入线上 Scheduler 或凭证。');
+console.log(selected.length === 1 && selected[0] === 'sausage-man-monitor'
+  ? '下一步：按 Skill 的 references/install.md 配置工作台地址并运行 doctor；没有创建业务任务或调度。'
+  : '下一步：在 Cindy 中连接所需 Gmail、Feishu、GitHub 或浏览器连接器，再使用目标目录 .cindy/ 下对应的 schedule 模板创建独立、默认暂停的定时任务。安装器不会写入线上 Scheduler 或凭证。');
 if (!interactive) console.log('模板模式：仅写入脱敏模板和本地运行目录，未写入账号、凭证或远程任务；如需安装时填写本机配置，请加 --interactive。');
 rl?.close();

@@ -1,0 +1,4 @@
+interface:
+  display_name: "香肠派对社区工作台"
+  short_description: "连接现有社区工作台，查询反馈与原文、下载报表，并按真实发布批次分析"
+  default_prompt: "使用 $sausage-man-monitor 检查工作台连接和当前发布，再按我的需求查询反馈、原文或运营报表。"

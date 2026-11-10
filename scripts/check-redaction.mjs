@@ -6,6 +6,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const files = [];
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name === '.git') continue; // Worktrees use a .git file pointing outside the package.
     const file = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (!['.git', 'assets'].includes(entry.name)) walk(file);
